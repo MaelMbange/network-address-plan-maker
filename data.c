@@ -11,6 +11,7 @@ struct Ip {
         unsigned char mask[4];
         unsigned maskValue;
     }mask;
+    unsigned decimalMask;
 };
 
 Ip* createIp(void){
@@ -45,32 +46,51 @@ void setMask(struct Ip* network,const char* Mask){
         exit(0);
     }
     
-    unsigned char maskPart;
-    unsigned char maskRest;
-    unsigned int recupMask;
 
-    if(sscanf(Mask,"/%u",&recupMask) != 1){
+    if(sscanf(Mask,"/%u",&network->decimalMask) != 1){
         printf("\033[91mMask is Invalid\033[0m\n");
         exit(0);
     }
 
-    network->mask.maskValue = ~(0xffffffff >> recupMask);
+    network->mask.maskValue = ~(0xffffffff >> network->decimalMask);
 
-    printf("Network Mask completed\n");
+    //printf("Network Mask completed\n");
 }
 
 
 char* getMask(Ip* network){
     char* mask = (char*)malloc(sizeof(char)*20);
-    sprintf(mask, "%-3u.%-3u.%-3u.%-3u", network->mask.mask[3], network->mask.mask[2], network->mask.mask[1], network->mask.mask[0]);
+    sprintf(mask, "%-u.%-u.%-u.%-u", network->mask.mask[3], network->mask.mask[2], network->mask.mask[1], network->mask.mask[0]);
     return mask;
 }
 
 char* getIpNetwork(Ip* network){
     char* Ip = (char*)malloc(sizeof(char)*20);
-    sprintf(Ip, "%-3u.%-3u.%-3u.%-3u", network->ip.ip[3],network->ip.ip[2],network->ip.ip[1],network->ip.ip[0]);
+    sprintf(Ip, "%-u.%-u.%-u.%-u", network->ip.ip[3],network->ip.ip[2],network->ip.ip[1],network->ip.ip[0]);
     return Ip;
 }
+
+char* getNetworkId(unsigned networkNumber, const Ip* network){
+    unsigned numberOfHosts = pow(2, (32 - network->decimalMask));
+
+    Ip networkId = *network;
+    networkId.ip.ipValue = network->ip.ipValue + ((networkNumber-1) * numberOfHosts);
+
+    char* Ip = (char*)malloc(sizeof(char)*20);
+    sprintf(Ip, "%-u.%-u.%-u.%-u", networkId.ip.ip[3],networkId.ip.ip[2],networkId.ip.ip[1],networkId.ip.ip[0]);
+    return Ip;
+}
+
+char* getNetworkHost(unsigned hostNumber,const Ip* network){
+
+    Ip networkId = *network;
+    networkId.ip.ipValue = network->ip.ipValue + hostNumber;
+
+    char* Ip = (char*)malloc(sizeof(char)*20);
+    sprintf(Ip, "%-u.%-u.%-u.%-u", networkId.ip.ip[3],networkId.ip.ip[2],networkId.ip.ip[1],networkId.ip.ip[0]);
+    return Ip;
+}
+
 
 
 void printIpHost(Ip* network,const unsigned hostNumber){
@@ -87,7 +107,7 @@ void printIpHost(Ip* network,const unsigned hostNumber){
     Ip host = *network;
     Ip LastNetwork = *network;
 
-    for(int i = 0; i < hostNumber; i++){
+    for(int i = 0; i <= hostNumber; i++){
         if((host.ip.ipValue & host.mask.maskValue) != (LastNetwork.ip.ipValue & LastNetwork.mask.maskValue)){
             LastNetwork.ip.ipValue = host.ip.ipValue;
             printf("--------------------------\n");
