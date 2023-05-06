@@ -6,7 +6,7 @@
 struct option longOptions[] = {
     {"network-Id", required_argument, 0, 'n'},
     {"mask", required_argument, 0, 'm'},
-    {"specific-hosts", required_argument, 0, 'H'},
+    {"specific-host", required_argument, 0, 'H'},
     {"show-host", required_argument, 0, 'p'},
     {"subnet", required_argument, 0, 's'},
     {"help", no_argument, 0, 'h'},
@@ -82,7 +82,7 @@ int main(int argc, char* argv[]){
                     printf("  -n, --network-Id <A.B.C.D>     Set the network-id\n");
                     printf("  -m, --mask </mask>             Set the mask-id\n");
                     printf("  -s, --subnet <subnet-number>   Print the network-subnet number x\n");
-                    printf("  -H, --specific-hosts <1,...>   Print the specific-host(s)\n");
+                    printf("  -H, --specific-host <1,...>    Print the specific-host(s)\n");
                     printf("  -p, --show-host <number>       Show the x host(s)\n");
                     printf("  -h, --help                     Print this help\n");
                     printf("\n");
