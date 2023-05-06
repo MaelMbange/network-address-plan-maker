@@ -23,7 +23,7 @@ Network ID: 192.168.1.0
 *  ``--mask </mask>``
 
 ```  
-terminal : .\main.exe --mask /24
+terminal : .\main.exe --network-Id 192.168.1.0 --mask /24
 -------------------------------------
 Mask ID   : 255.255.255.0
 ```
@@ -31,7 +31,7 @@ Mask ID   : 255.255.255.0
 * ``--subnet <subnet-number>``
 
 ```
-terminal : .\main.exe --subnet 11,12
+terminal : .\main.exe --network-Id 192.168.1.0 --subnet 11,12
 -------------------------------------
 Network 11 : 192.168.11.0
 Network 12 : 192.168.12.0
@@ -40,7 +40,7 @@ Network 12 : 192.168.12.0
 * ``--specific-host <1,...>``
 
 ```
-terminal : .\main.exe --specific-host 1,2,3
+terminal : .\main.exe --network-Id 192.168.1.0 --specific-host 1,2,3
 -------------------------------------
 Host 1  : 192.168.1.1
 Host 3  : 192.168.1.3
@@ -50,7 +50,7 @@ Host 5  : 192.168.1.5
 * ``--show-host <number>``
 
 ```
-terminal : .\main.exe --show-host 10
+terminal : .\main.exe --network-Id 192.168.1.0 --show-host 10
 -------------------------------------
 0   : 192.168.1.0
 1   : 192.168.1.1
