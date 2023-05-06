@@ -2,61 +2,47 @@
 #include <stdio.h>
 #include <getopt.h>
 #include "data.h"
-/*
-Ip* network = NULL;
-network = createIp();
 
-setIpNetwork(network, argv[1]);    
-setMask(network, argv[2]);
+struct option longOptions[] = {
+    {"network-Id", required_argument, 0, 'n'},
+    {"mask", required_argument, 0, 'm'},
+    {"specific-hosts", required_argument, 0, 'H'},
+    {"show-host", required_argument, 0, 'p'},
+    {"subnet", required_argument, 0, 's'},
+    {"help", no_argument, 0, 'h'},
+    {0,0,0,0}
+};
 
-char* IpNetwork = getIpNetwork(network);
-char* Mask = getMask(network);
-char* NetworkId = getNetworkId(10, network);
-char* NetworkHost = getNetworkHost(255, network);
-
-printf("%-10s: %s\n","Network ID",IpNetwork);
-printf("%10s: %s\n","Mask ID",Mask);
-printf("%10s: %s\n","10th network-id",NetworkId);
-printf("%10s: %s\n","255th network-hosts",NetworkHost);
-printf("--------------------------\n");
-printIpHost(network, atoi(argv[3]));
-printf("\n");
-
-free(IpNetwork);
-free(Mask);
-free(NetworkId);
-free(network);
-*/
+int option_index = 0; 
 
 int main(int argc, char* argv[]){
-    const char option[] = "i:m:N:h:H:";
     int opt = 0;
     Ip* network = createIp();
     char* string = NULL;
     char* token = NULL;
+    int isSet = 1;
 
-    while((opt = getopt(argc,argv,option)) != -1){
+    while((opt = getopt_long(argc,argv,"n:m:s:H:p:s",longOptions,&option_index)) != -1 && isSet){
         switch(opt){
+            case 'n':
+                    setIpNetwork(network,(const char*)optarg);
 
-        case 'i':
-                setIpNetwork(network,(const char*)optarg);
+                    string = getIpNetwork(network);
+                    printf("----------------------------\n");
+                    printf("%-10s: %s\n\n","Network ID",string);
+                    free(string);
+                break;
+            
+            case 'm':
+                    setMask(network,(const char*)optarg);
 
-                string = getIpNetwork(network);
-                printf("----------------------------\n");
-                printf("%-10s: %s\n\n","Network ID",string);
-                free(string);
-            break;
-        
-        case 'm':
-                setMask(network,(const char*)optarg);
+                    string = getMask(network);
+                    printf("----------------------------\n");
+                    printf("%-10s: %s\n\n","Mask ID",string);
+                    free(string);
+                break;
 
-                string = getMask(network);
-                printf("----------------------------\n");
-                printf("%-10s: %s\n\n","Mask ID",string);
-                free(string);
-            break;
-
-        case 'N':
+            case 's':
                     token = strtok(optarg,",");
                     printf("----------------------------\n");
 
@@ -67,9 +53,9 @@ int main(int argc, char* argv[]){
                         token = strtok(NULL,",");
                     }
                     printf("\n");
-            break;
+                break;
 
-        case 'h':
+            case 'H':
                     token = strtok(optarg,",");
                     printf("----------------------------\n");
 
@@ -80,22 +66,33 @@ int main(int argc, char* argv[]){
                         token = strtok(NULL,",");
                     }
                     printf("\n");
-            break;
+                break;
 
-        case 'H':
+            case 'p':
                     printf("----------------------------\n");
                     printIpHost(network,(unsigned)atoi(optarg));
                     printf("\n");
-            break;
+                break;
 
-        case '?':
-                printf("Invalid option\n");
-                abort();
-            break;
+            case 'h':
+            case '?':
+                    printf("----------------------------\n");
+                    printf("Usage: %s [options]\n",argv[0]);
+                    printf("Options:\n");
+                    printf("  -n, --network-Id <A.B.C.D>     Set the network-id\n");
+                    printf("  -m, --mask </mask>             Set the mask-id\n");
+                    printf("  -s, --subnet <subnet-number>   Print the network-subnet number x\n");
+                    printf("  -H, --specific-hosts <1,...>   Print the specific-host(s)\n");
+                    printf("  -p, --show-host <number>       Show the x host(s)\n");
+                    printf("  -h, --help                     Print this help\n");
+                    printf("\n");
+                    isSet = 0;
+                break;
+
+            default:
+                    isSet = 0;
         }
     }
-    
-
-    
+        
     return 0;
 }
