@@ -20,9 +20,8 @@ int main(int argc, char* argv[]){
     Ip* network = createIp();
     char* string = NULL;
     char* token = NULL;
-    int isSet = 1;
 
-    while((opt = getopt_long(argc,argv,"n:m:s:H:p:s",longOptions,&option_index)) != -1 && isSet){
+    while((opt = getopt_long(argc,argv,"n:m:s:H:p:s",longOptions,&option_index)) != -1){
         switch(opt){
             case 'n':
                     setIpNetwork(network,(const char*)optarg);
@@ -86,11 +85,11 @@ int main(int argc, char* argv[]){
                     printf("  -p, --show-host <number>       Show the x host(s)\n");
                     printf("  -h, --help                     Print this help\n");
                     printf("\n");
-                    isSet = 0;
+                    return 0;
                 break;
 
             default:
-                    isSet = 0;
+                    return 0;
         }
     }
         
